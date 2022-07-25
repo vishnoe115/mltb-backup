@@ -388,15 +388,23 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
 
     if not is_mega_link(link) and not isQbit and not is_magnet(link) \
         and not is_gdrive_link(link) and not link.endswith('.torrent'):
+        host = urlparse(link).netloc
+        is_gdtot = is_gdtot_link(link)
         content_type = get_content_type(link)
         if content_type is None or re_match(r'text/html|text/plain', content_type):
             try:
-                link = direct_link_generator(link)
+                if host == "uptobox.com" or host == "uploadhaven.com":
+                    editMessage(f"ℹ️ {tag} Generating {host} direct link. Tunggu sebentar...", check_)
+                    link = direct_link_generator(link, host)
+                else:
+                    link = direct_link_generator(link)
                 LOGGER.info(f"Generated link: {link}")
+                if check_ != None:
+                    deleteMessage(bot, check_); check_ = None
             except DirectDownloadLinkException as e:
                 LOGGER.info(str(e))
                 if str(e).startswith('ERROR:'):
-                    return sendMessage(str(e), bot, message)
+                    return sendMessage(f"⚠️ {tag} {e}", bot, message)
 
     listener = MirrorListener(bot, message, isZip, extract, isQbit, isLeech, pswd, tag, qbsd)
 
