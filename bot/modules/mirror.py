@@ -388,6 +388,9 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
         return sendMessage(help_msg, bot, message)
 
     LOGGER.info(link)
+    if multi == 0:
+        check_ = sendMessage(f"ℹ️ {tag} Checking for link, Please wait...", bot, message)
+    else: check_ = None
 
     if not is_mega_link(link) and not isQbit and not is_magnet(link) \
         and not is_gdrive_link(link) and not link.endswith('.torrent'):
@@ -397,7 +400,7 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
         if content_type is None or re_match(r'text/html|text/plain', content_type):
             try:
                 if host == "uptobox.com" or host == "uploadhaven.com":
-                    editMessage(f"ℹ️ {tag} Generating {host} direct link. Tunggu sebentar...", check_)
+                    editMessage(f"ℹ️ {tag} Generating {host} direct link. Please Waiting...", check_)
                     link = direct_link_generator(link, host)
                 else:
                     link = direct_link_generator(link)
