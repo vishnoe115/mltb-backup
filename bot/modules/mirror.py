@@ -403,7 +403,7 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
                     editMessage(f"ℹ️ {tag} Generating {host} direct link. Please Waiting...", check_)
                     link = direct_link_generator(link, host)
                 else:
-                    link = direct_link_generator(link)
+                    link = direct_link_generator(link, host)
                 LOGGER.info(f"Generated link: {link}")
                 if check_ != None:
                     deleteMessage(bot, check_); check_ = None
