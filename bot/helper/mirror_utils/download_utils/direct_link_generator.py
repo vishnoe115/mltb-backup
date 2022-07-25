@@ -10,6 +10,7 @@ for original authorship. """
 
 from requests import get as rget, head as rhead, post as rpost, Session as rsession
 from re import findall as re_findall, sub as re_sub, match as re_match, search as re_search
+from base64 import b64decode
 from urllib.parse import urlparse, unquote
 from json import loads as jsnloads
 from lk21 import Bypass
@@ -17,6 +18,7 @@ from cfscrape import create_scraper
 from bs4 import BeautifulSoup
 from base64 import standard_b64encode
 from time import sleep
+from lxml import etree
 
 from bot import LOGGER, UPTOBOX_TOKEN
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -30,6 +32,8 @@ def direct_link_generator(link: str):
     """ direct links generator """
     if 'youtube.com' in link or 'youtu.be' in link:
         raise DirectDownloadLinkException(f"ERROR: Use /{BotCommands.WatchCommand} to mirror Youtube link\nUse /{BotCommands.ZipWatchCommand} to make zip of Youtube playlist")
+    elif 'zippyshare.com' in host:
+        return zippy_share(link)
     elif 'yadi.sk' in link or 'disk.yandex.com' in link:
         return yandex_disk(link)
     elif 'mediafire.com' in link:
@@ -114,12 +118,27 @@ def uptobox(url: str) -> str:
                 req2 = rget(f"{file_link}&waitingToken={waiting_token}")
                 result2 = req2.json()
                 dl_url = result2['data']['dlLink']
-            elif result['message'].lower() == 'Please wait before request a new download link':
+            elif result['message'].lower() == 'Please wait before next request':
                 cooldown = divmod(result['data']['waiting'], 60)
-                raise DirectDownloadLinkException(f"ERROR: Uptobox is being cooldown {cooldown[0]} minutes {cooldown[1]} seconds")
+                raise DirectDownloadLinkException(f"ERROR: Uptobox is being limited please wait {cooldown[0]} minutes {cooldown[1]} seconds.")
             else:
                 LOGGER.info(f"UPTOBOX_ERROR: {result}")
                 raise DirectDownloadLinkException(f"ERROR: {result['message']}")
+    return dl_url
+
+def zippy_share(url: str) -> str:
+    base_url = re_search('http.+.zippyshare.com', url).group()
+    response = rget(url)
+    pages = BeautifulSoup(response.text, "html.parser")
+    js_script = str(pages.find("div", style="margin-left: 24px; margin-top: 20px; text-align: center; width: 303px; height: 105px;"))
+    try:
+        mtk = eval(re_findall(r"\+\((.*?).\+", js_script)[0] + " + 10 + 5/5")
+        uri1 = re_findall(r".href.=.\"/(.*?)/\"", js_script)[0]
+        uri2 = re_findall(r"\)\+\"/(.*?)\"", js_script)[0]
+    except Exception as err:
+        LOGGER.error(err)
+        raise DirectDownloadLinkException("ERROR: Can't Generate direct link")
+    dl_url = f"{base_url}/{uri1}/{int(mtk)}/{uri2}"
     return dl_url
 
 def mediafire(url: str) -> str:
