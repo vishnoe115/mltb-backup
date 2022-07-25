@@ -7,6 +7,7 @@ from shutil import rmtree
 from threading import Thread
 from subprocess import Popen
 from html import escape
+from urllib.parse import quote, urlparse
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 
