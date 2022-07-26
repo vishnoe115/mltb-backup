@@ -385,7 +385,9 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
         help_msg += "\n<code>/qbcommand</code> <b>s</b>(for selection) <b>d</b>(for seeding) {link} or by replying to {file/link}"
         help_msg += "\n\n<b>Multi links only by replying to first link or file:</b>"
         help_msg += "\n<code>/command</code> 10(number of links/files)"
-        return sendMessage(help_msg, bot, message)
+        smsg = sendMessage(help_msg, bot, message)
+        Thread(target=auto_delete_message, args=(bot, message, smsg)).start()
+        return
 
     LOGGER.info(link)
     if multi == 0:
