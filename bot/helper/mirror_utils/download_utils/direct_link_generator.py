@@ -124,7 +124,7 @@ def uptobox(url: str) -> str:
                 dl_url = result2['data']['dlLink']
             elif result['message'].lower() == 'you need to wait before requesting a new download link':
                 cooldown = divmod(result['data']['waiting'], 60)
-                raise DirectDownloadLinkException(f"ERROR: Uptobox sedang limit mohon tunggu {cooldown[0]} menit {cooldown[1]} detik.")
+                raise DirectDownloadLinkException(f"ERROR: Uptobox limited please wait {cooldown[0]} mins {cooldown[1]} secs.")
             else:
                 LOGGER.info(f"UPTOBOX_ERROR: {result}")
                 raise DirectDownloadLinkException(f"ERROR: {result['message']}")
