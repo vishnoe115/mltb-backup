@@ -418,6 +418,8 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
                     deleteMessage(bot, check_); check_ = None
             except DirectDownloadLinkException as e:
                 LOGGER.info(str(e))
+                if check_ != None:
+                    deleteMessage(bot, check_); check_ = None                
                 if str(e).startswith('ERROR:'):
                     return sendMessage(f"⚠️ {tag} {e}", bot, message)
 
