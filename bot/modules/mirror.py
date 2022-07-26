@@ -419,6 +419,8 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
                 if str(e).startswith('ERROR:'):
                     return sendMessage(f"⚠️ {tag} {e}", bot, message)
 
+    if check_ != None:
+        deleteMessage(bot, check_); check_ = None                  
     listener = MirrorListener(bot, message, isZip, extract, isQbit, isLeech, pswd, tag, qbsd)
 
     if is_gdrive_link(link):
