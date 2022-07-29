@@ -23,7 +23,6 @@ from time import sleep
 from lxml import etree
 
 from bot import LOGGER, UPTOBOX_TOKEN, CRYPT
-from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.bot_utils import is_gdtot_link
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 
@@ -34,7 +33,7 @@ fmed_list = ['fembed.net', 'fembed.com', 'femax20.com', 'fcdn.stream', 'feurl.co
 def direct_link_generator(link: str, host):
     """ direct links generator """
     if 'youtube.com' in link or 'youtu.be' in link:
-        raise DirectDownloadLinkException(f"ERROR: Use /{BotCommands.WatchCommand} to mirror Youtube link\nUse /{BotCommands.ZipWatchCommand} to make zip of Youtube playlist")
+        raise DirectDownloadLinkException(f"ERROR: Use watch cmds for Youtube links")
     elif 'zippyshare.com' in host:
         return zippy_share(link)
     elif 'yadi.sk' in link or 'disk.yandex.com' in link:
@@ -93,7 +92,7 @@ def yandex_disk(url: str) -> str:
     try:
         return rget(api.format(link)).json()['href']
     except KeyError:
-        raise DirectDownloadLinkException("ERROR: File not found/Download limit reached\n")
+        raise DirectDownloadLinkException("ERROR: File not found/Download limit reached")
 
 def uptobox(url: str) -> str:
     """ Uptobox direct link generator
@@ -101,7 +100,7 @@ def uptobox(url: str) -> str:
     try:
         link = re_findall(r'\bhttps?://.*uptobox\.com\S+', url)[0]
     except IndexError:
-        raise DirectDownloadLinkException("No Uptobox links found\n")
+        raise DirectDownloadLinkException("No Uptobox links found")
     if UPTOBOX_TOKEN is None:
         LOGGER.error('UPTOBOX_TOKEN not provided!')
         dl_url = link
@@ -155,7 +154,7 @@ def mediafire(url: str) -> str:
     try:
         link = re_findall(r'\bhttps?://.*mediafire\.com\S+', url)[0]
     except IndexError:
-        raise DirectDownloadLinkException("No MediaFire links found\n")
+        raise DirectDownloadLinkException("No MediaFire links found")
     page = BeautifulSoup(rget(link).content, 'lxml')
     info = page.find('a', {'aria-label': 'Download file'})
     return info.get('href')
@@ -166,7 +165,7 @@ def osdn(url: str) -> str:
     try:
         link = re_findall(r'\bhttps?://.*osdn\.net\S+', url)[0]
     except IndexError:
-        raise DirectDownloadLinkException("No OSDN links found\n")
+        raise DirectDownloadLinkException("No OSDN links found")
     page = BeautifulSoup(
         rget(link, allow_redirects=True).content, 'lxml')
     info = page.find('a', {'class': 'mirror_link'})
@@ -183,12 +182,12 @@ def github(url: str) -> str:
     try:
         re_findall(r'\bhttps?://.*github\.com.*releases\S+', url)[0]
     except IndexError:
-        raise DirectDownloadLinkException("No GitHub Releases links found\n")
+        raise DirectDownloadLinkException("No GitHub Releases links found")
     download = rget(url, stream=True, allow_redirects=False)
     try:
         return download.headers["location"]
     except KeyError:
-        raise DirectDownloadLinkException("ERROR: Can't extract the link\n")
+        raise DirectDownloadLinkException("ERROR: Can't extract the link")
 
 def hxfile(url: str) -> str:
     """ Hxfile direct link generator
@@ -277,7 +276,7 @@ def racaty(url: str) -> str:
     try:
         re_findall(r'\bhttps?://.*racaty\.net\S+', url)[0]
     except IndexError:
-        raise DirectDownloadLinkException("No Racaty links found\n")
+        raise DirectDownloadLinkException("No Racaty links found")
     scraper = create_scraper()
     r = scraper.get(url)
     soup = BeautifulSoup(r.text, "lxml")
@@ -328,7 +327,7 @@ def fichier(link: str) -> str:
             else:
                 raise DirectDownloadLinkException(f"ERROR: 1fichier limited please wait {numbers[0]} mins.")
         elif "protect access" in str(str_2).lower():
-            raise DirectDownloadLinkException(f"ERROR: This link need password!\n\n- add sign <b>::</b> after link and type password after that sign.\n\n<b>example:</b>\n<code>/{BotCommands.MirrorCommand} https://1fichier.com/?smmtd8twfpm66awbqz04::love you</code>\n\n* without space between link and password <b>::</b>\n* but password could using space")
+          raise DirectDownloadLinkException(f"ERROR: This link requires a password!\n\n<b>This link requires a password!</b>\n- Insert sign <b>::</b> after the link and write the password after the sign.\n\n<b>Example:</b> https://1fichier.com/?smmtd8twfpm66awbqz04::love you\n\n* No spaces between the signs <b>::</b>\n* For the password, you can use a space!")
         else:
             print(str_2)
             raise DirectDownloadLinkException("ERROR: Failed to generate direct link 1fichier!")
@@ -375,8 +374,7 @@ def krakenfiles(page_link: str) -> str:
         for item in soup.find_all("div", attrs={"data-file-hash": True})
     ]
     if not hashes:
-        raise DirectDownloadLinkException(
-            f"Hash not found for : {page_link}")
+        raise DirectDownloadLinkException(f"ERROR: Hash not found for : {page_link}")
 
     dl_hash = hashes[0]
 
@@ -395,8 +393,7 @@ def krakenfiles(page_link: str) -> str:
     if "url" in dl_link_json:
         return dl_link_json["url"]
     else:
-        raise DirectDownloadLinkException(
-            f"Failed to acquire download URL from kraken for : {page_link}")
+        raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from kraken for : {page_link}")
         
 def gdtot(url: str) -> str:
     """ Gdtot google drive link generator
@@ -416,17 +413,14 @@ def gdtot(url: str) -> str:
         decoded_id = b64decode(str(matches[0])).decode('utf-8')
     except:
         raise DirectDownloadLinkException("ERROR: Try in your broswer, mostly file not found or user limit exceeded!")
-    return f'https://drive.google.com/open?id={decoded_id}'        
+    return f'https://drive.google.com/open?id={decoded_id}'
 
 def uploadee(url: str) -> str:
     """ uploadee direct link generator
     By https://github.com/iron-heart-x"""
     try:
         soup = BeautifulSoup(rget(url).content, 'lxml')
-        s_a=soup.find('a', attrs={'id':'d_l'})
-        dl_link=s_a['href']
-        return dl_link
+        sa = soup.find('a', attrs={'id':'d_l'})
+        return sa['href']
     except:
-        raise DirectDownloadLinkException(
-            f"Failed to acquire download URL from upload.ee for : {url}")
-    
+        raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from upload.ee for : {url}")
