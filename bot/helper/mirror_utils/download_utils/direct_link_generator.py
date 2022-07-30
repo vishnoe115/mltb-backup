@@ -138,14 +138,14 @@ def zippy_share(url: str) -> str:
     js_script = pages.find("div", style="margin-left: 24px; margin-top: 20px; text-align: center; width: 303px; height: 105px;").text
     if js_script is None:
         js_script = pages.find("div", style="margin-left: -22px; margin-top: -5px; text-align: center;width: 303px;").text
-        
+
     try:
-        mtk = eval(re_findall(r"\+\((.*?).\+", js_script)[0] + " + 10 + 5/5")
+        mtk = eval(re_findall(r"\+\((.*?).\+", js_script)[0] + " + 11")
         uri1 = re_findall(r".href.=.\"/(.*?)/\"", js_script)[0]
         uri2 = re_findall(r"\)\+\"/(.*?)\"", js_script)[0]
     except Exception as err:
         LOGGER.error(err)
-        raise DirectDownloadLinkException("ERROR: Can't Generate direct link")
+        raise DirectDownloadLinkException("ERROR: Get direct link failed")
     dl_url = f"{base_url}/{uri1}/{int(mtk)}/{uri2}"
     return dl_url
 
