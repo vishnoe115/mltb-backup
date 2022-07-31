@@ -135,17 +135,18 @@ def zippy_share(url: str) -> str:
     base_url = re_search('http.+.zippyshare.com', url).group()
     response = rget(url)
     pages = BeautifulSoup(response.text, "html.parser")
-    js_script = pages.find("div", style="margin-left: 24px; margin-top: 20px; text-align: center; width: 303px; height: 105px;").text
+    js_script = pages.find("div", style="margin-left: 24px; margin-top: 20px; text-align: center; width: 303px; height: 105px;")
     if js_script is None:
-        js_script = pages.find("div", style="margin-left: -22px; margin-top: -5px; text-align: center;width: 303px;").text
-
+        js_script = pages.find("div", style="margin-left: -22px; margin-top: -5px; text-align: center;width: 303px;")
+    js_script = str(js_script)
+        
     try:
         mtk = eval(re_findall(r"\+\((.*?).\+", js_script)[0] + " + 11")
         uri1 = re_findall(r".href.=.\"/(.*?)/\"", js_script)[0]
         uri2 = re_findall(r"\)\+\"/(.*?)\"", js_script)[0]
     except Exception as err:
         LOGGER.error(err)
-        raise DirectDownloadLinkException("ERROR: Get direct link failed")
+        raise DirectDownloadLinkException("ERROR: Can't Generate direct link")
     dl_url = f"{base_url}/{uri1}/{int(mtk)}/{uri2}"
     return dl_url
 
