@@ -405,6 +405,7 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
         return sendMessage(help_msg, bot, message)
 
     LOGGER.info(link)
+    
     if multi == 0:
         check_ = sendMessage(f"ℹ️ {tag} Checking for link, Please wait...", bot, message)
     else: check_ = None
