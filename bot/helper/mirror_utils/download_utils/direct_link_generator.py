@@ -140,9 +140,9 @@ def zippy_share(url: str) -> str:
     js_script = str(js_script)
 
     try:
-        mtk = eval(re_findall(r"\+\((.*?).\+", js_script)[0] + " + 11")
+        mtk = eval(re_findall(r"\+.\((.*?)\).\+", js_script)[0])
         uri1 = re_findall(r".href.=.\"/(.*?)/\"", js_script)[0]
-        uri2 = re_findall(r"\)\+\"/(.*?)\"", js_script)[0]
+        uri2 = re_findall(r"\+.\"/(.*?)\"", js_script)[0]
     except Exception as err:
         LOGGER.error(err)
         raise DirectDownloadLinkException("ERROR: Tidak dapat mengambil direct link")
