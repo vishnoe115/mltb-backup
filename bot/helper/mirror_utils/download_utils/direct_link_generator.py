@@ -8,19 +8,15 @@ from https://github.com/AvinashReddy3108/PaperplaneExtended . I hereby take no c
 than the modifications. See https://github.com/AvinashReddy3108/PaperplaneExtended/commits/master/userbot/modules/direct_links.py
 for original authorship. """
 
-import math
-
 from requests import get as rget, head as rhead, post as rpost, Session as rsession
 from re import findall as re_findall, sub as re_sub, match as re_match, search as re_search
-from base64 import b64decode
 from urllib.parse import urlparse, unquote
 from json import loads as jsnloads
 from lk21 import Bypass
 from cfscrape import create_scraper
 from bs4 import BeautifulSoup
-from base64 import standard_b64encode
+from base64 import standard_b64encode, b64decode
 from time import sleep
-from lxml import etree
 
 from bot import LOGGER, UPTOBOX_TOKEN, CRYPT
 from bot.helper.ext_utils.bot_utils import is_gdtot_link
@@ -30,17 +26,17 @@ fmed_list = ['fembed.net', 'fembed.com', 'femax20.com', 'fcdn.stream', 'feurl.co
              'naniplay.nanime.in', 'naniplay.nanime.biz', 'naniplay.com', 'mm9842.com']
 
 
-def direct_link_generator(link: str, host):
+def direct_link_generator(link: str):
     """ direct links generator """
     if 'youtube.com' in link or 'youtu.be' in link:
-        raise DirectDownloadLinkException(f"ERROR: Use watch cmds for Youtube links")
-    elif 'zippyshare.com' in host:
+        raise DirectDownloadLinkException(f"ERROR: Use ytdl cmds for Youtube links")
+    elif 'zippyshare.com' in link:
         return zippy_share(link)
     elif 'yadi.sk' in link or 'disk.yandex.com' in link:
         return yandex_disk(link)
     elif 'mediafire.com' in link:
         return mediafire(link)
-    elif 'uptobox.com' in host:
+    elif 'uptobox.com' in link:
         return uptobox(link)
     elif 'osdn.net' in link:
         return osdn(link)
@@ -71,7 +67,7 @@ def direct_link_generator(link: str, host):
     elif 'krakenfiles.com' in link:
         return krakenfiles(link)
     elif is_gdtot_link(link):
-        return gdtot(link)    
+        return gdtot(link)
     elif 'upload.ee' in link:
         return uploadee(link)
     elif any(x in link for x in fmed_list):
@@ -96,7 +92,7 @@ def yandex_disk(url: str) -> str:
 
 def uptobox(url: str) -> str:
     """ Uptobox direct link generator
-    based on https://github.com/jovanzers/WinTenCermin """
+    based on https://github.com/jovanzers/WinTenCermin and https://github.com/sinoobie/noobie-mirror """
     try:
         link = re_findall(r'\bhttps?://.*uptobox\.com\S+', url)[0]
     except IndexError:
@@ -124,7 +120,7 @@ def uptobox(url: str) -> str:
                 dl_url = result2['data']['dlLink']
             elif result['message'].lower() == 'you need to wait before requesting a new download link':
                 cooldown = divmod(result['data']['waiting'], 60)
-                raise DirectDownloadLinkException(f"ERROR: Uptobox limited please wait {cooldown[0]} mins {cooldown[1]} secs.")
+                raise DirectDownloadLinkException(f"ERROR: Uptobox is being limited please wait {cooldown[0]} min {cooldown[1]} sec.")
             else:
                 LOGGER.info(f"UPTOBOX_ERROR: {result}")
                 raise DirectDownloadLinkException(f"ERROR: {result['message']}")
@@ -327,29 +323,29 @@ def fichier(link: str) -> str:
         if "you must wait" in str(str_2).lower():
             numbers = [int(word) for word in str(str_2).split() if word.isdigit()]
             if not numbers:
-                raise DirectDownloadLinkException("ERROR: 1fichier limited please wait some minutes.")
+                raise DirectDownloadLinkException("ERROR: 1fichier is on a limit. Please wait a few minutes/hour.")
             else:
-                raise DirectDownloadLinkException(f"ERROR: 1fichier limited please wait {numbers[0]} mins.")
+                raise DirectDownloadLinkException(f"ERROR: 1fichier is on a limit. Please wait {numbers[0]} minute.")
         elif "protect access" in str(str_2).lower():
           raise DirectDownloadLinkException(f"ERROR: This link requires a password!\n\n<b>This link requires a password!</b>\n- Insert sign <b>::</b> after the link and write the password after the sign.\n\n<b>Example:</b> https://1fichier.com/?smmtd8twfpm66awbqz04::love you\n\n* No spaces between the signs <b>::</b>\n* For the password, you can use a space!")
         else:
             print(str_2)
-            raise DirectDownloadLinkException("ERROR: Failed to generate direct link 1fichier!")
+            raise DirectDownloadLinkException("ERROR: Failed to generate Direct Link from 1fichier!")
     elif len(soup.find_all("div", {"class": "ct_warn"})) == 4:
         str_1 = soup.find_all("div", {"class": "ct_warn"})[-2]
         str_3 = soup.find_all("div", {"class": "ct_warn"})[-1]
         if "you must wait" in str(str_1).lower():
             numbers = [int(word) for word in str(str_1).split() if word.isdigit()]
             if not numbers:
-                raise DirectDownloadLinkException("ERROR: 1fichier limited please wait some minutes.")
+                raise DirectDownloadLinkException("ERROR: 1fichier is on a limit. Please wait a few minutes/hour.")
             else:
-                raise DirectDownloadLinkException(f"ERROR: 1fichier limited please wait {numbers[0]} mins.")
+                raise DirectDownloadLinkException(f"ERROR: 1fichier is on a limit. Please wait {numbers[0]} minute.")
         elif "bad password" in str(str_3).lower():
-            raise DirectDownloadLinkException("ERROR: You Entered Wrong Password!")
+          raise DirectDownloadLinkException("ERROR: The password you entered is wrong!")
         else:
-            raise DirectDownloadLinkException("ERROR: Failed to generate direct link 1fichier!")
+            raise DirectDownloadLinkException("ERROR: Error trying to generate Direct Link from 1fichier!")
     else:
-        raise DirectDownloadLinkException("ERROR: Failed to generate direct link 1fichier!")
+        raise DirectDownloadLinkException("ERROR: Error trying to generate Direct Link from 1fichier!")
 
 def solidfiles(url: str) -> str:
     """ Solidfiles direct link generator
@@ -398,7 +394,17 @@ def krakenfiles(page_link: str) -> str:
         return dl_link_json["url"]
     else:
         raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from kraken for : {page_link}")
-        
+
+def uploadee(url: str) -> str:
+    """ uploadee direct link generator
+    By https://github.com/iron-heart-x"""
+    try:
+        soup = BeautifulSoup(rget(url).content, 'lxml')
+        sa = soup.find('a', attrs={'id':'d_l'})
+        return sa['href']
+    except:
+        raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from upload.ee for : {url}")
+
 def gdtot(url: str) -> str:
     """ Gdtot google drive link generator
     By https://github.com/xcscxr """
@@ -418,13 +424,3 @@ def gdtot(url: str) -> str:
     except:
         raise DirectDownloadLinkException("ERROR: Try in your broswer, mostly file not found or user limit exceeded!")
     return f'https://drive.google.com/open?id={decoded_id}'
-
-def uploadee(url: str) -> str:
-    """ uploadee direct link generator
-    By https://github.com/iron-heart-x"""
-    try:
-        soup = BeautifulSoup(rget(url).content, 'lxml')
-        sa = soup.find('a', attrs={'id':'d_l'})
-        return sa['href']
-    except:
-        raise DirectDownloadLinkException(f"ERROR: Failed to acquire download URL from upload.ee for : {url}")
