@@ -1,45 +1,88 @@
-This is a Telegram Bot written in Python for mirroring files on the Internet to your Google Drive or Telegram. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+# How to deploy?
+- Basic Tutorial Deploying Telegram Mirror Bot
+ <p><a href="https://youtu.be/IUmq1paCiHI"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
+ 
+<p align="right"><sub>Based on <a href="https://github.com/lzzy12/python-aria-mirror-bot">python-aria-mirror-bot</a> repository<sub></p>
 
 # Features:
 
-## By [Anas](https://github.com/anasty17)
-- qBittorrent.
-- Select files from Torrent before downloading using qbittorrent and aria2c.
-- Leech (splitting, thumbnail for each user, setting as document or as media for each user).
-- Stop duplicates for all tasks except yt-dlp tasks.
-- Zip/Unzip G-Drive links.
-- Counting files/folders from Google Drive link.
-- View Link button, extra button to open file index link in broswer instead of direct download.
-- Status Pages for unlimited tasks.
-- Clone status.
-- Search in multiple Drive folder/TeamDrive.
-- Recursive Search (only with `root` or TeamDrive ID, folder ids will be listed with non-recursive method).
-- Multi-TD list by token.pickle if exists.
-- Extract rar, zip and 7z splits with or without password.
-- Zip file/folder with or without password.
-- Use Token.pickle if file not found with Service Account for all Gdrive functions.
-- Random Service Account at startup.
-- Mirror/Leech/Watch/Clone/Count/Del by reply.
-- YT-DLP quality buttons.
-- Search on torrents with Torrent Search API or with variable plugins using qBittorrent search engine
-- Docker image support for linux `amd64, arm64/v8, arm/v7, s390x`.
-- Update bot at startup and with restart command using `UPSTREAM_REPO`.
-- Qbittorrent seed until reaching specific ratio or time.
-- Rss feed and filter. Based on this repository [rss-chan](https://github.com/hyPnOtICDo0g/rss-chan).
-- Save leech settings including thumbnails in database.
-- Mirror/Leech/Clone multi links/files with one command.
-- Extensions Filter for the files to be uploaded/cloned.
-- Incomplete task notifier to get incomplete task messages after restart, works with database.
-- Almost all repository functions have been improved.
-- Custom Name for all links except torrents. For files you should add extension except yt-dlp links.
-- Many bugs have been fixed.
+## By [anasty17](https://github.com/anasty17)
+In each single file there is a major change from base code, it's almost totaly different. Here some of features and fixes that I remember.
+### qBittorrent
+- Qbittorrent support
+- Select files from Torrent before and while downloading
+- Seed torrents to specific ratio and time
+### Aria2c
+- Select files from Torrent before and while downloading
+- Seed torrents to specific ratio and time
+- Netrc support
+- Direct link authentication for specific link while using the bot (it will work even if only username or password)
+- Improve aria.sh
+- Fix all download listener functions and status
+### Leech
+- Leech support
+- Splitting
+- Thumbnail for each user
+- Set upload as document or as media for each user
+- 4GB file upload with premium account
+### Google
+- Stop duplicates for all tasks except yt-dlp tasks
+- Download G-Drive links
+- Counting files/folders from Google Drive link
+- Search in multiple Drive folder/TeamDrive
+- Recursive Search (only with `root` or TeamDrive ID, folder ids will be listed with non-recursive method)
+- Use Token.pickle if file not found with Service Account, for all Gdrive functions
+- List result in html file instead of telegraph or telegram message to avoid limits by @junedkh
+- Random Service Account at startup
+### Status
+- Clone Status
+- Extract Status
+- Archive Status
+- Seed Status
+- Status Pages for unlimited tasks
+- Ability to cancel upload/clone/archive/extract/split
+- Cancel all buttons for choosing specific tasks status to cancel
+- Fix flooding issues
+- Fix overall upload and download speed
+### Yt-dlp
+- Switch from youtube-dl to yt-dlp and fix all conflicts
+- Yt-dlp quality buttons
+- Support for download live streams
+- Ability to use specific yt-dlp arg for each task
+- Fix download progress
+### Database
+- SQL Database support
+- Save leech settings including thumbnails in database
+- Save sudo and authorized users
+- Incomplete task notifier to get incomplete task messages after restart
+### Torrents Search
+- Torrent search support
+- Search on torrents with Torrent Search API
+- Search on torrents with variable plugins using qBittorrent search engine
+### Archives
+- Zip instead of tar
+- Using 7-zip tool to extract all supported files
+- Extract rar, zip and 7z within folder or splits with or without password
+- Zip file/folder with or without password
+### RSS
+- Rss feed. Based on this repository [rss-chan](https://github.com/hyPnOtICDo0g/rss-chan)
+- Filter added and all functions have been improved
+### Overall
+- Docker image support for linux `amd64, arm64/v8, arm/v7, s390x`
+- Update bot at startup and with restart command using `UPSTREAM_REPO`
+- Mirror/Leech/Watch/Clone/Count/Del by reply
+- Mirror/Leech/Clone multi links/files with one command
+- Custom name for all links except torrents. For files you should add extension except yt-dlp links
+- Extensions Filter for the files to be uploaded/cloned
+- View Link button. Extra button to open index link in broswer instead of direct download for file
+- Almost all repository functions have been improved and many other details can't mention all of them
+- Many bugs have been fixed
 
-## From Other Repositories
-- Mirror direct download links, Torrent, and Telegram files to Google Drive
-- Mirror Mega.nz links to Google Drive
-- Copy files from someone's Drive to your Drive (Using Autorclone)
+## From Base and other Repositories
+- Mirror direct download links, Torrent, Mega.nz and Telegram files to Google Drive
+- Copy files from someone's Drive to your Drive
 - Download/Upload progress, Speeds and ETAs
-- Mirror all yt-dlp supported links
+- Mirror all youtube-dl supported links
 - Docker support
 - Uploading to Team Drive
 - Index Link support
@@ -49,11 +92,10 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 - Shell and Executor
 - Add sudo users
 - Extract password protected files
-- Extract these filetypes and uploads to Google Drive
+- Extract these filetypes
   > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS, DEB, DMG, FAT, HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, NTFS, RPM, SquashFS, UDF, VHD, XAR, Z, TAR.XZ
-
 - Direct links Supported:
-  >mediafire, letsupload.io, hxfile.co, anonfiles.com, bayfiles.com, antfiles, fembed.com, fembed.net, femax20.com, layarkacaxxi.icu, fcdn.stream, sbplay.org, naniplay.com, naniplay.nanime.in, naniplay.nanime.biz, sbembed.com, streamtape.com, streamsb.net, feurl.com, upload.ee, pixeldrain.com, racaty.net, 1fichier.com, 1drv.ms (Only works for file not folder or business account), uptobox.com (Uptobox account must be premium) and solidfiles.com
+  >mediafire, letsupload.io, hxfile.co, anonfiles.com, bayfiles.com, antfiles, fembed.com, fembed.net, femax20.com, layarkacaxxi.icu, fcdn.stream, sbplay.org, naniplay.com, naniplay.nanime.in, naniplay.nanime.biz, sbembed.com, streamtape.com, streamsb.net, feurl.com, upload.ee, pixeldrain.com, racaty.net, 1fichier.com, 1drv.ms (Only works for file not folder or business account), uptobox.com and solidfiles.com
 
 # How to deploy?
 
@@ -130,17 +172,16 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `UPSTREAM_BRANCH`: Upstream branch for update. Default is `master`. `Str`
 
 ### Leech
-- `USER_SESSION_STRING`: To download/upload from your telegram account. To generate session string use this command `python3 generate_string_session.py` after mounting repo folder for sure. `Str`. **NOTE**: You can't use bot with private message, use it with supergroup or channel.
 - `LEECH_SPLIT_SIZE`: Size of split in bytes. Default is `2GB`. Default is `4GB` if your account is premium. `Str`
 - `AS_DOCUMENT`: Default type of Telegram file upload. Default is `False` mean as media. `Bool`
 - `EQUAL_SPLITS`: Split files larger than **LEECH_SPLIT_SIZE** into equal parts size (Not working with zip cmd). Default is `False`. `Bool`
 - `CUSTOM_FILENAME`: Add custom word to leeched file name. `Str`
+- `USER_SESSION_STRING`: To download/upload from your telegram account. To generate session string use this command `python3 generate_string_session.py` after mounting repo folder for sure. `Str`. **NOTE**: You can't use bot with private message. Use it with supergroup or channel.
 
 ### qBittorrent
 - `BASE_URL_OF_BOT`: Valid BASE URL where the bot is deployed to use qbittorrent web selection. Format of URL should be `http://myip`, where `myip` is the IP/Domain(public) of your bot or if you have chosen port other than `80` so write it in this format `http://myip:port` (`http` and not `https`). This Var is optional on VPS and required for Heroku specially to avoid app sleeping/idling. For Heroku fill `https://yourappname.herokuapp.com`. Still got idling? You can use http://cron-job.org to ping your Heroku app. `Str`
 - `SERVER_PORT`: Only For VPS, which is the **BASE_URL_OF_BOT** Port. `Str`
 - `WEB_PINCODE`: If empty or `False` means no more pincode required while qbit web selection. `Bool`
-- `QB_SEED`: QB torrent will be seeded after and while uploading until reaching specific ratio or time, edit `MaxRatio` or `GlobalMaxSeedingMinutes` or both from qbittorrent.conf (`-1` means no limit, but u can cancel manually by gid). **NOTE**: 1. Don't change `MaxRatioAction`, 2. Only works with `/qbmirror` and `/qbzipmirror`. Also you can use this feature for specific torrent while using the bot and leave this variable empty. Default is `False`. `Bool`
   - **Qbittorrent NOTE**: If your facing ram exceeded issue then set limit for `MaxConnecs`, decrease `AsyncIOThreadsCount` in qbittorrent config and set limit of `DiskWriteCacheSize` to `32`.
 
 ### RSS
@@ -165,7 +206,7 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `MEGA_PASSWORD`: Password for mega.nz account. `Str`
 
 ### Buttons
-- `VIEW_LINK`: View Link button to open file Index Link in browser instead of direct download link, you can figure out if it's compatible with your Index code or not, open any video from you Index and check if its URL ends with `?a=view`, if yes make it `True`. Compatible with [BhadooIndex](https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index) Code. Default is `False`. `Bool`
+- `VIEW_LINK`: View Link button to open file Index Link in browser instead of direct download link, you can figure out if it's compatible with your Index code or not, open any video from you Index and check if its URL ends with `?a=view`. Compatible with [BhadooIndex](https://gitlab.com/ParveenBhadooOfficial/Google-Drive-Index) Code. Default is `False`. `Bool`
 
 ### Torrent Search
 - `SEARCH_API_LINK`: Search api app link. Get your api from deploying this [repository](https://github.com/Ryuk-me/Torrent-Api-py). `Str`
@@ -213,7 +254,6 @@ sudo docker image prune -a
 ```
 4. Check the number of processing units of your machine with `nproc` cmd and times it by 4, then edit `AsyncIOThreadsCount` in qBittorrent.conf.
 5. You can add `CONFIG_FILE_URL` variable using docker and docker-compose, google it.
-6. Only `amd64` and `arm64/v8` are tested, if you faced missing package package error while installing requirements with other images then you can open issue.
 
 ------
 
@@ -264,8 +304,8 @@ sudo docker-compose stop
 ```
 sudo docker-compose start
 ```
-- Tutorial video from Tortoolkit repo for docker-compose and checking ports
-<p><a href="https://youtu.be/c8_TU1sPK08"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
+- Tutorial video Deploying on VPS
+<p><a href="https://youtu.be/IzUG7U7v4U4"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
 
 ------
 
@@ -279,33 +319,33 @@ sudo docker-compose start
 ## Bot commands to be set in [@BotFather](https://t.me/BotFather)
 
 ```
-mirror - Mirror
-zipmirror - Mirror and upload as zip
-unzipmirror - Mirror and extract files
-qbmirror - Mirror torrent using qBittorrent
-qbzipmirror - Mirror torrent and upload as zip using qb
-qbunzipmirror - Mirror torrent and extract files using qb
-leech - Leech
-zipleech - Leech and upload as zip
-unzipleech - Leech and extract files
-qbleech - Leech torrent using qBittorrent
-qbzipleech - Leech torrent and upload as zip using qb
-qbunzipleech - Leech torrent and extract using qb
+mirror - or /m Mirror
+zipmirror - or /zm Mirror and upload as zip
+unzipmirror - or /uzm Mirror and extract files
+qbmirror - or /qm Mirror torrent using qBittorrent
+qbzipmirror - or /qzm Mirror torrent and upload as zip using qb
+qbunzipmirror - or /quzm Mirror torrent and extract files using qb
+leech - or /l Leech
+zipleech - or /zl Leech and upload as zip
+unzipleech - or /uzl Leech and extract files
+qbleech - or /ql Leech torrent using qBittorrent
+qbzipleech - or /qzl Leech torrent and upload as zip using qb
+qbunzipleech - or /quzl Leech torrent and extract using qb
 clone - Copy file/folder to Drive
 count - Count file/folder of Drive
-watch - Mirror yt-dlp supported link
-zipwatch - Mirror yt-dlp supported link as zip
-leechwatch - Leech through yt-dlp supported link
-leechzipwatch - Leech yt-dlp support link as zip
+ytdl - or /y Mirror yt-dlp supported link
+ytdlzip - or /yz Mirror yt-dlp supported link as zip
+ytdlleech - or /yl Leech through yt-dlp supported link
+ytdlzipleech - or /yzl Leech yt-dlp support link as zip
 leechset - Leech settings
 setthumb - Set thumbnail
 status - Get Mirror Status message
 btsel - select files from torrent
-rsslist - List all subscribed rss feed info
-rssget - Get specific No. of links from specific rss feed
-rsssub - Subscribe new rss feed
-rssunsub - Unsubscribe rss feed by title
-rssset - Rss Settings
+rsslist - or /rl List all subscribed rss feed info
+rssget - or /rg Get specific No. of links from specific rss feed
+rsssub - or /rs Subscribe new rss feed
+rssunsub - or /rus Unsubscribe rss feed by title
+rssset - or /rst Rss Settings
 list - Search files in Drive
 search - Search for torrents with API
 cancel - Cancel a task
@@ -326,14 +366,29 @@ help - All cmds with description
 - You can add private/public repository link to grab/overwrite all files from it.
 - You can skip adding the privates files like token.pickle or accounts folder before deploying, also no need to add variables direct links except **config.env**, simply fill `UPSTREAM_REPO` private one in case you want to grab all files including private files.
 - If you added private files while deploying and you have added private `UPSTREAM_REPO` and your private files in this private repository, so your private files will be overwritten from this repository. Also if you are using URL variables like `TOKEN_PICKLE_URL` then all files from those variables will override the private files that added before deploying or from private `UPSTREAM_REPO`.
-- If you filled `UPSTREAM_REPO` with the official repository link then be carefull incase any change in requirements.txt your bot will not start after restart. In this case you need to deploy again with updated code to install the new requirements or simply by changing the `UPSTREAM_REPO` to you fork link with that old updates or make it empty if deployed master branch.
+- If you filled `UPSTREAM_REPO` with the official repository link, then be carefull incase any change in requirements.txt your bot will not start after restart. In this case you need to deploy again with updated code to install the new requirements or simply by changing the `UPSTREAM_REPO` to you fork link with that old updates.
 - In case you you filled `UPSTREAM_REPO` with your fork link be carefull also if you fetched the commits from the official repository.
 - The changes in your `UPSTREAM_REPO` will take affect only after restart.
 - `UPSTREAM_BRANCH` don't ever fill heroku here.
 
 ------
 
+## Bittorrent Seed
+
+- Add `d:ratio:time` perfix along with leech or mirror cmd.
+- Using `d` perfix alone will lead to use global options for aria2c or qbittorrent.
+
+### Qbittorrent
+- Global options: `MaxRatio` and `GlobalMaxSeedingMinutes` in qbittorrent.conf, `-1` means no limit, but you can cancel manually.
+  - **NOTE**: Don't change `MaxRatioAction`.
+
+### Aria2c
+- Global options: `--seed-ratio` (0 means no limit) and `--seed-time` (0 means no seed) in aria.sh.
+
+------
+
 ## Using Service Accounts for uploading to avoid user rate limit
+
 >For Service Account to work, you must set `USE_SERVICE_ACCOUNTS` = "True" in config file or environment variables.
 >**NOTE**: Using Service Accounts is only recommended while uploading to a Team Drive.
 
@@ -462,5 +517,38 @@ Using Aria2c you can also use built in feature from bot with or without username
 machine example.workers.dev password index_password
 ```
 Where host is the name of extractor (eg. instagram, Twitch). Multiple accounts of different hosts can be added each separated by a new line.
+
+-----
+
+## Gdtot Crypt
+- Tutorial Video How to Get GDTOT Crypt:
+ <p><a href="https://youtu.be/EfZ29CotRSU"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
+
+To Clone or Leech gdtot link follow these steps:
+1. Login/Register to [gdtot](https://new1.gdtot.sbs).
+2. Copy this script and paste it in browser address bar.
+   - **Note**: After pasting it check at the beginning of the script in broswer address bar if `javascript:` exists or not, if not so write it as shown below.
+   ```javascript
+   javascript:(function () {
+    const input = document.createElement('input');
+    COOKIE = JSON.parse(JSON.stringify({cookie : document.cookie}));
+    input.value = COOKIE['cookie'].split('crypt=')[1];
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+     if(result)
+       alert('Crypt copied to clipboard');
+     else
+       prompt('Failed to copy Crypt. Manually copy below Crypt\n\n', input.value);
+   })();
+   ```
+   - After pressing enter your browser will prompt a alert.
+3. Now you'll get Crypt value in your clipboard
+   ```
+   NGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWdSVT0%3D
+   ```
+4. From this you have to paste value for **CRYPT** in config.env file.
 
 -----
